@@ -1,6 +1,6 @@
 [package]
 name = "retstat"
-version = "1.0.0"
+version = "1.0.1"
 description = "HTTP Server returning the status in the URL"
 authors = ["Brad Alfirevic <brad@genbyte.dev>"]
 repository = "https://git.sr.ht/~genbyte/retstat"

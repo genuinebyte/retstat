@@ -6,6 +6,9 @@
 This program will **ret**urn the **stat**us code you provide it in the URL as
 the body of the response while also using that as the status code.
 
+retsta was born out of the desire to have a reliable source of status codes so I
+could test my shell scripts without hitting someone else's server so many times.
+
 I have it live at <https://genbyte.dev/status/>, so some examples:
 
 - <https://genbyte.dev/status/302> returns Status 302
@@ -18,8 +21,8 @@ purpose) heavy. Ideally I'll use something like tiny_http, but I wanted the
 threading that comes with Rocket by default.
 
 ### Configuration
-Configuration is controlled through the <Rocket.toml> file. There you can change
-the port and address, among other things.
+Configuration is controlled through the [`Rocket.toml`](Rocket.toml) file. There
+you can change the port and address that the server runs on.
 
 retstat defaults to only running on `localhost`, port `30210`.
 

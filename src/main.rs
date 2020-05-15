@@ -20,7 +20,7 @@ fn status<'a>(stat: u16) -> Response<'a> {
 }
 
 #[catch(404)]
-fn not_found<'a>(req: &Request) -> Response<'a> {
+fn not_found<'a>(_req: &Request) -> Response<'a> {
     let mut resp = Response::new();
     resp.set_status(Status::NotFound);
     resp.set_sized_body(Cursor::new("404"));
