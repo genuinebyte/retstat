@@ -1,7 +1,9 @@
 # retstat
-[todo.sr.ht][tickets]
+[Homepage: hub.sr.ht][hub] |  [Tickets: todo.sr.ht][todo] | [crates.io][crates]
 
-[tickets]: https://todo.sr.ht/~genbyte/retstat
+[hub]: https://sr.ht/~genbyte/retstat/
+[todo]: https://todo.sr.ht/~genbyte/retstat
+[crates]: https://crates.io/crates/retstat
 
 This program will **ret**urn the **stat**us code you provide it in the URL as
 the body of the response while also using that as the status code.
@@ -15,6 +17,8 @@ I have it live at <https://genbyte.dev/status/>, so some examples:
 - <https://genbyte.dev/status/500> returns Status 500
 
 There is a very basic service file for systemd in the root of the source tree.
+It assumes the bin is at `/usr/bin/retstat` and the Rocket.toml file lives in the
+`/etc/retstat` directory.
 
 I'd like to move away from Rocket eventually, as it's needlessly (for this
 purpose) heavy. Ideally I'll use something like tiny_http, but I wanted the
