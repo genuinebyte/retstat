@@ -1,36 +1,71 @@
-#![feature(proc_macro_hygiene, decl_macro)]
+use getopts::Options;
+use std::env;
+use tiny_http::{Server, StatusCode, Response};
 
-#[macro_use] extern crate rocket;
-use std::io::Cursor;
-use rocket::http::Status;
-use rocket::{Request, Response};
-
-#[get("/<stat>")]
-fn status<'a>(stat: u16) -> Response<'a> {
-    let mut resp = Response::new();
-
-    match Status::from_code(stat) {
-        Some(status) => resp.set_status(status),
-        None => resp.set_status(Status::NotFound)
-    }
-
-    resp.set_sized_body(Cursor::new(format!("{}", resp.status().code)));
-
-    resp
+struct CliArgs {
+    host: String
 }
 
-#[catch(404)]
-fn not_found<'a>(_req: &Request) -> Response<'a> {
-    let mut resp = Response::new();
-    resp.set_status(Status::NotFound);
-    resp.set_sized_body(Cursor::new("404"));
+fn print_usage(program: &str, opts: Options) {
+    let usage = format!("Usage: {} [options]", program);
+    print!("{}", opts.usage(&usage));
+}
 
-    resp
+fn parse_arguments() -> Option<CliArgs> {
+    let args: Vec<String> = env::args().collect();
+    let program = args[0].clone();
+
+    let mut opts = Options::new();
+    opts.optopt("l", "host", "where the server should listen.\nDefault localhost:30210", "HOST");
+    opts.optflag("h", "help", "print this message and exit");
+    let matches = match opts.parse(&args[1..]) {
+        Ok(m) => m,
+        Err(e) => {
+            println!("{}", e.to_string());
+            print_usage(&program, opts);
+            return None;
+        }
+    };
+
+    if matches.opt_present("h") {
+        print_usage(&program, opts);
+        return None;
+    }
+
+    let host = match matches.opt_str("l") {
+        Some(l) => l,
+        None => "localhost:30210".to_owned()
+    };
+
+    Some(CliArgs {
+        host
+    })
 }
 
 fn main() {
-    rocket::ignite()
-        .mount("/", routes![status])
-        .register(catchers![not_found])
-        .launch();
+    let args = match parse_arguments() {
+        Some(a) => a,
+        None => return
+    };
+
+    let server = match Server::http(args.host) {
+        Ok(s) => s,
+        Err(e) => {
+            println!("Could not start server: {}", e);
+            return;
+        }
+    };
+
+    for request in server.incoming_requests() {
+        // Drop the slash on the url
+        let url = &request.url()[1..];
+        let requested_status = match url.parse::<u16>() {
+            Ok(n) => n,
+            Err(_) => 404
+        };
+
+        let status_code = StatusCode::from(requested_status);
+        let response = Response::from_string(status_code.default_reason_phrase()).with_status_code(status_code);
+        request.respond(response).ok();
+    }
 }

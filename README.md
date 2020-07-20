@@ -5,11 +5,14 @@
 [todo]: https://todo.sr.ht/~genbyte/retstat
 [crates]: https://crates.io/crates/retstat
 
-This program will **ret**urn the **stat**us code you provide it in the URL as
-the body of the response while also using that as the status code.
+This program will **ret**urn the **stat**us code to you. That is, in its HTTP
+response, the status code you pass in the URL will be used. The body of the
+response is the default phrasing for that code. If you pass a code that is
+unknown, "Unknown" will be the body.
 
-retsta was born out of the desire to have a reliable source of status codes so I
-could test my shell scripts without hitting someone else's server so many times.
+retstat was born out of the desire to have a reliable source of status codes so
+I could test my shell scripts without hitting someone else's server so many
+times.
 
 I have it live at <https://genbyte.dev/status/>, so some examples:
 
@@ -17,18 +20,14 @@ I have it live at <https://genbyte.dev/status/>, so some examples:
 - <https://genbyte.dev/status/500> returns Status 500
 
 There is a very basic service file for systemd in the root of the source tree.
-It assumes the bin is at `/usr/bin/retstat` and the Rocket.toml file lives in the
-`/etc/retstat` directory.
-
-I'd like to move away from Rocket eventually, as it's needlessly (for this
-purpose) heavy. Ideally I'll use something like tiny_http, but I wanted the
-threading that comes with Rocket by default.
+It assumes the bin is at `/usr/bin/retstat`.
 
 ### Configuration
-Configuration is controlled through the [`Rocket.toml`](Rocket.toml) file. There
-you can change the port and address that the server runs on.
+There isn't much configuration available, as this small server doesn't do much.
+You can change the listening address with the `-l` cli option. The long option
+is `--host`, if you want to use that.
 
-retstat defaults to only running on `localhost`, port `30210`.
+retstat defaults to listening on `localhost:30210`.
 
 Below is the recommended configuration for Nginx.
 Thanks to [this][so] answer which taught me how to remove the path the proxy
