@@ -5,3 +5,6 @@ Description=Retstat's service file
 Type=exec
 WorkingDirectory=/etc/retstat
 ExecStart=/usr/bin/retstat
+
+[Install]
+WantedBy=multi-user.target
