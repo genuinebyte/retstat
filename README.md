@@ -1,8 +1,6 @@
 # retstat
-[Homepage: hub.sr.ht][hub] |  [Tickets: todo.sr.ht][todo] | [crates.io][crates]
+[crates.io][crates]
 
-[hub]: https://sr.ht/~genbyte/retstat/
-[todo]: https://todo.sr.ht/~genbyte/retstat
 [crates]: https://crates.io/crates/retstat
 
 This program will **ret**urn the **stat**us code to you. That is, in its HTTP
